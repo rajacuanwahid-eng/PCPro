@@ -3,82 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Stacking Kanal Paralel</title>
+    <title>Kalkulator Kanal Pro - Auto Copy</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; padding: 20px; background-color: #f0f2f5; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 450px; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; padding: 20px; background-color: #f0f2f5; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 480px; }
         h3 { margin-top: 0; color: #1a73e8; border-bottom: 2px solid #e8f0fe; padding-bottom: 10px; text-align: center; }
         
         .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .input-group { margin-bottom: 15px; }
         label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: #555; font-weight: 600; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; transition: 0.2s; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
         input:focus { border-color: #2962ff; outline: none; background-color: #fcfdfe; }
 
-        /* Container Tombol */
         .button-group { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 10px; }
-        
-        button { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; }
+        button { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.2s; }
         .btn-calc { background-color: #2962ff; color: white; }
         .btn-calc:hover { background-color: #1e4bd8; }
         .btn-reset { background-color: #e0e0e0; color: #444; }
-        .btn-reset:hover { background-color: #bdbdbd; }
         
         .results-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .result-box { padding: 12px; border-radius: 8px; font-size: 0.9rem; text-align: center; }
+        .result-box { padding: 12px; border-radius: 8px; font-size: 0.9rem; position: relative; }
         .up { background-color: #e8f5e9; border: 1px solid #c8e6c9; }
         .down { background-color: #ffebee; border: 1px solid #ffcdd2; }
         
-        .result-title { font-weight: bold; margin-bottom: 8px; display: block; font-size: 0.85rem; }
-        .val { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #222; font-size: 1.1rem; display: block; margin-top: 4px; }
+        .result-title { font-weight: bold; margin-bottom: 10px; display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .footer-note { font-size: 0.75rem; color: #888; margin-top: 15px; text-align: center; line-height: 1.4; }
+        /* Gaya Baris Hasil & Tombol Copy */
+        .price-line { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.6); padding: 5px 8px; border-radius: 4px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.05); }
+        .val { font-family: 'Courier New', monospace; font-weight: bold; color: #222; font-size: 1rem; }
+        
+        .copy-btn { background: #fff; border: 1px solid #ddd; padding: 4px 8px; font-size: 0.7rem; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .copy-btn:hover { background: #f0f0f0; border-color: #bbb; }
+        .copy-btn:active { transform: scale(0.95); }
+
+        /* Toast Notifikasi */
+        #toast { visibility: hidden; min-width: 150px; background-color: #333; color: #fff; text-align: center; border-radius: 20px; padding: 10px; position: fixed; z-index: 1; bottom: 30px; font-size: 14px; }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 1.5s; }
+
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h3>Kalkulator Kanal Duplikat</h3>
+    <h3>Parallel Channel Copy</h3>
     
     <div class="input-group">
         <label>Harga #1 (Asli)</label>
-        <input type="number" id="p1" step="any" placeholder="0.000">
+        <input type="number" id="p1" step="any" placeholder="4548.350">
     </div>
-
     <div class="input-group">
         <label>Harga #2 (Asli)</label>
-        <input type="number" id="p2" step="any" placeholder="0.000">
+        <input type="number" id="p2" step="any" placeholder="4404.375">
     </div>
 
     <div class="input-group">
-        <label>Price Offset (Jarak Kanal)</label>
-        <input type="number" id="offset" step="any" placeholder="Contoh: -183.981">
+        <label>Price Offset (Lebar Kanal)</label>
+        <input type="number" id="offset" step="any" placeholder="-183.981">
     </div>
 
     <div class="button-group">
-        <button class="btn-calc" onclick="hitung()">Hitung Koordinat</button>
+        <button class="btn-calc" onclick="hitung()">Hitung & Tampilkan</button>
         <button class="btn-reset" onclick="resetForm()">Reset</button>
     </div>
 
     <div class="results-container">
         <div class="result-box up">
-            <span class="result-title" style="color: #2e7d32;">↑ STACK KE ATAS</span>
-            <p>Harga #1: <span id="up1" class="val">-</span></p>
-            <p>Harga #2: <span id="up2" class="val">-</span></p>
+            <span class="result-title" style="color: #2e7d32;">↑ Ke Atas</span>
+            <div class="price-line">
+                <span id="up1" class="val">-</span>
+                <button class="copy-btn" onclick="copyText('up1')">Copy</button>
+            </div>
+            <div class="price-line">
+                <span id="up2" class="val">-</span>
+                <button class="copy-btn" onclick="copyText('up2')">Copy</button>
+            </div>
         </div>
 
         <div class="result-box down">
-            <span class="result-title" style="color: #c62828;">↓ STACK KE BAWAH</span>
-            <p>Harga #1: <span id="down1" class="val">-</span></p>
-            <p>Harga #2: <span id="down2" class="val">-</span></p>
+            <span class="result-title" style="color: #c62828;">↓ Ke Bawah</span>
+            <div class="price-line">
+                <span id="down1" class="val">-</span>
+                <button class="copy-btn" onclick="copyText('down1')">Copy</button>
+            </div>
+            <div class="price-line">
+                <span id="down2" class="val">-</span>
+                <button class="copy-btn" onclick="copyText('down2')">Copy</button>
+            </div>
         </div>
     </div>
-
-    <div class="footer-note">
-        Salin angka di atas ke menu <b>Koordinat</b> pada kanal baru.<br>
-        <i>Gunakan nilai "Bar" yang sama dengan kanal asli.</i>
-    </div>
 </div>
+
+<div id="toast">Tersalin ke Clipboard!</div>
 
 <script>
     function hitung() {
@@ -87,33 +104,36 @@
         const offset = parseFloat(document.getElementById('offset').value);
 
         if (isNaN(p1) || isNaN(p2) || isNaN(offset)) {
-            alert("Harap isi semua kolom harga dan offset!");
+            alert("Harap masukkan angka yang valid!");
             return;
         }
 
-        // Kita ambil nilai absolut (jarak murni)
         const absOffset = Math.abs(offset);
         
-        // Output Atas
         document.getElementById('up1').innerText = (p1 + absOffset).toFixed(3);
         document.getElementById('up2').innerText = (p2 + absOffset).toFixed(3);
-
-        // Output Bawah
         document.getElementById('down1').innerText = (p1 - absOffset).toFixed(3);
         document.getElementById('down2').innerText = (p2 - absOffset).toFixed(3);
     }
 
+    function copyText(elementId) {
+        const text = document.getElementById(elementId).innerText;
+        if (text === "-") return;
+
+        navigator.clipboard.writeText(text).then(() => {
+            showToast();
+        });
+    }
+
+    function showToast() {
+        const toast = document.getElementById("toast");
+        toast.className = "show";
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
+    }
+
     function resetForm() {
-        // Reset Input
-        document.getElementById('p1').value = "";
-        document.getElementById('p2').value = "";
-        document.getElementById('offset').value = "";
-        
-        // Reset Tampilan Hasil
-        document.getElementById('up1').innerText = "-";
-        document.getElementById('up2').innerText = "-";
-        document.getElementById('down1').innerText = "-";
-        document.getElementById('down2').innerText = "-";
+        document.querySelectorAll('input').forEach(input => input.value = "");
+        document.querySelectorAll('.val').forEach(span => span.innerText = "-");
     }
 </script>
 
